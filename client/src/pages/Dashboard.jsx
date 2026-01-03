@@ -5,7 +5,7 @@ export default function Dashboard({ user }) {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/articles/user/${user.email}`)
+    fetch(`${process.env.REACT_APP_API_URL}/articles/user/${user.email}`)
       .then(res => res.json())
       .then(data => setArticles(data.articles || []));
   }, [user.email]);
