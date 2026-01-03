@@ -22,7 +22,7 @@ export default function App() {
       setError("");
       setArticles([]);
 
-      const res = await fetch(`http://localhost:5000/news/${email}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/news/${email}`);
       const data = await res.json();
 
       if (res.status === 404 || data.isNewUser) {
@@ -54,7 +54,7 @@ export default function App() {
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:5000/users/onboard", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/onboard`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
