@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Newspaper, Mail, ArrowRight, CheckCircle2, Sparkles, TrendingUp, Zap } from "lucide-react";
+import "./App.css";
 
-const TOPICS = ["AI", "Technology", "Finance", "Sports"];
+const TOPICS = ["AI", "Technology", "Finance", "Sports", "MongoDB"];
 
 export default function App() {
   const [email, setEmail] = useState("");
@@ -80,139 +82,247 @@ export default function App() {
 
   // ================= UI =================
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        <h1 style={styles.title}>📰 Personalized News Digest</h1>
+    <div className="app-container">
+      {/* Subtle grid background */}
+      <div className="grid-background"></div>
+      
+      {/* Ambient glow */}
+      <div className="ambient-glow"></div>
 
-        {!isNewUser && (
-          <>
-            <input
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
-            />
+      <div className="app-content">
+        {/* Header */}
+        <header className="app-header">
+          <div className="header-container">
+            <div className="header-content">
+              <div className="logo-section">
+                <div className="logo-glow-wrapper">
+                  <div className="logo-glow"></div>
+                  <div className="logo-icon">
+                    <Newspaper className="icon" />
+                  </div>
+                </div>
+                <span className="app-title">NewsFlow</span>
+              </div>
+              <div className="live-indicator">
+                <div className="live-dot-wrapper">
+                  <div className="live-dot"></div>
+                  <div className="live-ping"></div>
+                </div>
+                <span className="live-text">Live</span>
+              </div>
+            </div>
+          </div>
+        </header>
 
-            <button onClick={fetchDigest} style={styles.button}>
-              {loading ? "Loading..." : "Get My Digest"}
-            </button>
-          </>
-        )}
+        {/* Main Content */}
+        <main className="main-content">
+          {!isNewUser ? (
+            // Login View
+            <div className="login-view">
+              <div className="login-header">
+                <div className="ai-badge">
+                  <Zap className="badge-icon" />
+                  <span>AI-Powered Curation</span>
+                </div>
+                <h1 className="main-title">
+                  Your personalized<br />news digest
+                </h1>
+                <p className="main-subtitle">
+                  Stay ahead with intelligent news curation tailored to your interests
+                </p>
+              </div>
 
-        {isNewUser && (
-          <>
-            <h3 style={{ marginBottom: 12 }}>
-              Welcome! What topics interest you?
-            </h3>
+              <div className="form-container">
+                <div className="input-group">
+                  <div className="input-glow"></div>
+                  <div className="input-wrapper">
+                    <Mail className="input-icon" />
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && fetchDigest()}
+                      className="email-input"
+                    />
+                  </div>
+                </div>
 
-            <div style={styles.tags}>
-              {TOPICS.map((topic) => (
-                <span
-                  key={topic}
-                  onClick={() =>
-                    setSelectedTopics((prev) =>
-                      prev.includes(topic)
-                        ? prev.filter((t) => t !== topic)
-                        : [...prev, topic]
-                    )
-                  }
-                  style={{
-                    ...styles.tag,
-                    background: selectedTopics.includes(topic)
-                      ? "#38bdf8"
-                      : "#020617",
-                    color: selectedTopics.includes(topic) ? "#000" : "#fff",
-                  }}
+                <button
+                  onClick={fetchDigest}
+                  disabled={loading}
+                  className={`primary-button ${loading ? 'loading' : ''}`}
                 >
-                  {topic}
+                  <div className="button-hover-bg"></div>
+                  {loading ? (
+                    <>
+                      <div className="spinner"></div>
+                      <span className="button-text">Loading your digest...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="button-text">Continue</span>
+                      <ArrowRight className="button-arrow" />
+                    </>
+                  )}
+                </button>
+
+                {error && (
+                  <div className="error-message">
+                    <p>{error}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="stats-section">
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <div className="stat-value">AI</div>
+                    <div className="stat-label">Powered</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-value">5+</div>
+                    <div className="stat-label">Topics</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-value">Daily</div>
+                    <div className="stat-label">Updates</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Onboarding View
+            <div className="onboarding-view">
+              <div className="onboarding-header">
+                <div className="onboarding-icon-wrapper">
+                  <div className="icon-glow-pulse"></div>
+                  <div className="onboarding-icon">
+                    <Sparkles className="sparkles-icon" />
+                  </div>
+                </div>
+                <h1 className="main-title">
+                  Choose your<br />interests
+                </h1>
+                <p className="main-subtitle">
+                  Select the topics that matter to you and we'll curate your personalized news feed
+                </p>
+              </div>
+
+              <div className="topics-grid">
+                {TOPICS.map((topic) => {
+                  const isSelected = selectedTopics.includes(topic);
+                  return (
+                    <button
+                      key={topic}
+                      onClick={() =>
+                        setSelectedTopics((prev) =>
+                          prev.includes(topic)
+                            ? prev.filter((t) => t !== topic)
+                            : [...prev, topic]
+                        )
+                      }
+                      className={`topic-card ${isSelected ? 'selected' : ''}`}
+                    >
+                      {isSelected && (
+                        <div className="check-badge-wrapper">
+                          <div className="check-badge-glow"></div>
+                          <div className="check-badge">
+                            <CheckCircle2 className="check-icon" />
+                          </div>
+                        </div>
+                      )}
+                      <div className="topic-name">{topic}</div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedTopics.length > 0 && (
+                <div className="selection-badge-wrapper">
+                  <div className="selection-badge">
+                    <CheckCircle2 className="badge-icon" />
+                    <span>{selectedTopics.length} topic{selectedTopics.length > 1 ? 's' : ''} selected</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="onboarding-actions">
+                <button
+                  onClick={saveInterests}
+                  disabled={loading || selectedTopics.length === 0}
+                  className={`primary-button ${loading ? 'loading' : ''}`}
+                >
+                  <div className="button-hover-bg"></div>
+                  {loading ? (
+                    <>
+                      <div className="spinner"></div>
+                      <span className="button-text">Saving preferences...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="button-text">Continue</span>
+                      <ArrowRight className="button-arrow" />
+                    </>
+                  )}
+                </button>
+
+                {error && (
+                  <div className="error-message">
+                    <p>{error}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Articles Feed */}
+          {articles.length > 0 && (
+            <div className="articles-section">
+              <div className="articles-header">
+                <div className="articles-title-wrapper">
+                  <div className="trending-icon-wrapper">
+                    <TrendingUp className="trending-icon" />
+                  </div>
+                  <h2 className="articles-title">Your Digest</h2>
+                </div>
+                <span className="articles-count">
+                  {articles.length} articles
                 </span>
-              ))}
+              </div>
+
+              <div className="articles-grid">
+                {articles.map((article, i) => (
+                  <article key={i} className="article-card">
+                    <div className="article-glow"></div>
+                    <div className="article-content">
+                      <h3 className="article-title">{article.title}</h3>
+                      <p className="article-description">
+                        {article.summary || article.description}
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
+          )}
+        </main>
 
-            <button onClick={saveInterests} style={styles.button}>
-              {loading ? "Saving..." : "Save & Continue"}
-            </button>
-          </>
-        )}
-
-        {error && <p style={styles.error}>{error}</p>}
-
-        <div style={styles.feed}>
-          {articles.map((a, i) => (
-            <div key={i} style={styles.article}>
-              <h4>{a.title}</h4>
-              <p>{a.summary || a.description}</p>
+        {/* Footer */}
+        <footer className="app-footer">
+          <div className="footer-container">
+            <div className="footer-content">
+              <p className="footer-text">
+                Intelligently curated for you
+              </p>
+              <div className="footer-status">
+                <div className="status-dot"></div>
+                <span className="status-text">Always Up to Date</span>
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
 }
-
-// ================= STYLES =================
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "radial-gradient(circle at top, #0f172a, #020617)",
-    display: "flex",
-    justifyContent: "center",
-    paddingTop: 80,
-    color: "#fff",
-  },
-  container: {
-    width: "100%",
-    maxWidth: 640,
-    padding: 30,
-    background: "rgba(2,6,23,0.92)",
-    borderRadius: 18,
-    boxShadow: "0 30px 80px rgba(0,0,0,0.7)",
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: 25,
-  },
-  input: {
-    width: "100%",
-    padding: 14,
-    borderRadius: 10,
-    border: "1px solid #334155",
-    background: "#020617",
-    color: "#fff",
-    marginBottom: 15,
-  },
-  button: {
-    width: "100%",
-    padding: 14,
-    borderRadius: 10,
-    background: "#38bdf8",
-    border: "none",
-    fontWeight: "bold",
-    cursor: "pointer",
-    marginBottom: 15,
-  },
-  tags: {
-    display: "flex",
-    gap: 10,
-    flexWrap: "wrap",
-    marginBottom: 20,
-  },
-  tag: {
-    padding: "8px 16px",
-    borderRadius: 20,
-    border: "1px solid #334155",
-    cursor: "pointer",
-  },
-  feed: {
-    marginTop: 20,
-  },
-  article: {
-    padding: 15,
-    borderBottom: "1px solid #334155",
-  },
-  error: {
-    color: "#f87171",
-    marginTop: 10,
-    textAlign: "center",
-  },
-};
